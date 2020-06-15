@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: pushgithub
-        image: gcr.io/potent-galaxy-274115/pushgithub
+        image: gcr.io/cit-262-group2/sportsareback
         ports:
         - containerPort: 80
         resources:
