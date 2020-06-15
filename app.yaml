@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pushgithub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pushgithub
+  template:
+    metadata:
+      labels:
+        app: pushgithub
+    spec:
+      containers:
+      - name: pushgithub
+        image: gcr.io/potent-galaxy-274115/pushgithub
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: ".5"
+            memory: "500Mi"
+          requests:
+            cpu: ".25"
+            memory: "250Mi"
+        livenessProbe:
+          httpGet:
+            path: /index.html
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pushgithub-service
+spec:
+  selector:
+    app: pushgithub
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pushgithub-loadbalancer
+spec:
+  selector:
+    app: pushgithub
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
